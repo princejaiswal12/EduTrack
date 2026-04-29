@@ -1,51 +1,214 @@
-<!doctype html>
-<html>
-<head><meta charset="utf-8"><title>Manage Students</title></head>
-<body style="font-family:Arial;margin:0">
-  <%- include('partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Manage Students</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <main style="padding:24px">
-    <h1>Manage Students</h1>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f7fa;
+  }
 
-    <section style="background:#fff;padding:16px;border-radius:10px;margin-bottom:20px">
+  header {
+    background: #0a2540;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .container {
+    display: flex;
+  }
+
+  .sidebar {
+    width: 220px;
+    background: #0a2540;
+    color: white;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .sidebar a {
+    display: block;
+    color: white;
+    margin: 10px 0;
+    text-decoration: none;
+  }
+
+  .main {
+    flex: 1;
+    padding: 25px;
+  }
+
+  /* FORM */
+  .form-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+  }
+
+  .form-card input, .form-card select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  .form-card button {
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+  }
+
+  th {
+    background: #0a2540;
+    color: white;
+    padding: 12px;
+  }
+
+  td {
+    padding: 10px;
+    text-align: center;
+  }
+
+  tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+
+  .btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+  }
+
+  .edit {
+    background: #2196f3;
+  }
+
+  .delete {
+    background: #f44336;
+  }
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>🎓 Manage Students</h2>
+</header>
+
+<div class="container">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h3>Admin</h3>
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/students">Students</a>
+    <a href="/teachers">Teachers</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- FORM -->
+    <div class="form-card">
       <h3>Add Student</h3>
-      <form action="/students" method="POST" enctype="multipart/form-data">
-        <label>Photo</label><input type="file" name="studentPhoto"><br>
-        <label>Full Name</label><input name="student[fullName]" required><br>
-        <label>Roll Number</label><input name="student[rollNumber]" required><br>
-        <label>Email</label><input type="email" name="student[email]" required><br>
-        <label>Phone</label><input name="student[phone]" required><br>
-        <label>Class</label><input name="student[class]" required><br>
-        <label>Hostel</label><input name="student[hostel]"><br>
-        <button type="submit">Save Student</button>
-      </form>
-    </section>
 
-    <section style="background:#fff;padding:16px;border-radius:10px">
-      <h3>Students List</h3>
-      <table border="0" cellpadding="8" style="width:100%;border-collapse:collapse">
-        <thead>
-          <tr style="background:#eee"><th>#</th><th>Name</th><th>Roll</th><th>Email</th><th>Phone</th></tr>
-        </thead>
-        <tbody>
-          <% if (students && students.length > 0) { %>
-            <% students.forEach((s, i) => { %>
-              <tr>
-                <td><%= i+1 %></td>
-                <td><a href="/students/<%= s._id %>/dashboard"><%= s.fullName %></a></td>
-                <td><%= s.rollNumber %></td>
-                <td><%= s.email %></td>
-                <td><%= s.phone %></td>
-              </tr>
-            <% }) %>
-          <% } else { %>
-            <tr><td colspan="5">No students</td></tr>
-          <% } %>
-        </tbody>
-      </table>
-    </section>
-  </main>
-  <%- include('partials/footer') %>
+      <form method="POST" action="/students" enctype="multipart/form-data">
+
+        <input type="file" name="studentPhoto">
+
+        <input name="student[fullName]" placeholder="Full Name" required>
+        <input name="student[rollNumber]" placeholder="Roll Number" required>
+        <input name="student[email]" placeholder="Email">
+        <input name="student[phone]" placeholder="Phone">
+
+        <select name="student[class]">
+          <option>Class 10</option>
+          <option>Class 11</option>
+        </select>
+
+        <select name="student[hostel]">
+          <option>Not Allotted</option>
+          <option>Hostel A</option>
+        </select>
+
+        <button>Add Student</button>
+      </form>
+    </div>
+
+    <!-- TABLE -->
+    <h3>Student List</h3>
+
+    <table>
+      <tr>
+        <th>Photo</th>
+        <th>Name</th>
+        <th>Roll</th>
+        <th>Email</th>
+        <th>Class</th>
+        <th>Action</th>
+      </tr>
+
+      <% students.forEach(s => { %>
+        <tr>
+
+          <td>
+            <% if (s.photo && s.photo.data) { %>
+              <img src="data:<%= s.photo.contentType %>;base64,<%= s.photo.data.toString('base64') %>">
+            <% } else { %>
+              <img src="https://via.placeholder.com/50">
+            <% } %>
+          </td>
+
+          <td><%= s.fullName %></td>
+          <td><%= s.rollNumber %></td>
+          <td><%= s.email %></td>
+          <td><%= s.class %></td>
+
+          <td>
+            <button class="btn edit">Edit</button>
+            <button class="btn delete">Delete</button>
+          </td>
+
+        </tr>
+      <% }) %>
+
+    </table>
+
+  </div>
+
+</div>
 
 </body>
 </html>

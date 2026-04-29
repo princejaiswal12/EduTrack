@@ -1,69 +1,211 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Manage Subjects</title>
+<meta charset="UTF-8">
+<title>Manage Subjects</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f7fa;
+  }
+
+  /* HEADER */
+  header {
+    background: #0a2540;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* LAYOUT */
+  .container {
+    display: flex;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 220px;
+    background: #0a2540;
+    color: white;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .sidebar h3 {
+    color: #4caf50;
+  }
+
+  .sidebar a {
+    display: block;
+    margin: 10px 0;
+    color: white;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 6px;
+  }
+
+  .sidebar a:hover {
+    background: #4caf50;
+  }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    padding: 25px;
+  }
+
+  /* FORM */
+  .form-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+  }
+
+  .form-card input, .form-card select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  .form-card button {
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+  }
+
+  th {
+    background: #0a2540;
+    color: white;
+    padding: 12px;
+  }
+
+  td {
+    padding: 10px;
+    text-align: center;
+  }
+
+  tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+
+  .btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+  }
+
+  .edit { background: #2196f3; }
+  .delete { background: #f44336; }
+
+</style>
 </head>
+
 <body>
 
-  <h1>Manage Subjects</h1>
+<header>
+  <h2>📚 Manage Subjects</h2>
+</header>
 
-  <h3>Add Subject</h3>
-  <form action="/subjects" method="POST">
-    <label>Subject Name</label><br>
-    <input name="subject[subjectName]" required><br><br>
+<div class="container">
 
-    <label>Subject Code</label><br>
-    <input name="subject[subjectCode]" required><br><br>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h3>Admin</h3>
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/students">Students</a>
+    <a href="/teachers">Teachers</a>
+    <a href="/subjects">Subjects</a>
+  </div>
 
-    <label>Department</label><br>
-    <input name="subject[department]" required><br><br>
+  <!-- MAIN -->
+  <div class="main">
 
-    <label>Assigned Teacher</label><br>
-    <select name="subject[assignedTeacher]" required>
-      <% if (teachers && teachers.length > 0) { %>
-        <% teachers.forEach(t => { %>
-          <option value="<%= t.fullName %>"><%= t.fullName %></option>
-        <% }) %>
-      <% } %>
-    </select><br><br>
+    <!-- FORM -->
+    <div class="form-card">
+      <h3>Add Subject</h3>
 
-    <button type="submit">Save Subject</button>
-  </form>
+      <form method="POST" action="/subjects">
 
-  <hr>
+        <input name="subject[subjectName]" placeholder="Subject Name" required>
+        <input name="subject[subjectCode]" placeholder="Subject Code" required>
 
-  <h3>Subjects List</h3>
-  <table border="1" cellpadding="8">
-    <tr>
-      <th>#</th>
-      <th>Name</th>
-      <th>Code</th>
-      <th>Department</th>
-      <th>Teacher</th>
-      <th>Delete</th>
-    </tr>
+        <select name="subject[department]">
+          <option>Science</option>
+          <option>Mathematics</option>
+          <option>Commerce</option>
+          <option>Arts</option>
+          <option>Computer Science</option>
+        </select>
 
-    <% if (subjects && subjects.length > 0) { %>
-      <% subjects.forEach((s, i) => { %>
+        <select name="subject[assignedTeacher]">
+          <% if (teachers && teachers.length > 0) { %>
+            <% teachers.forEach(t => { %>
+              <option><%= t.fullName %></option>
+            <% }) %>
+          <% } else { %>
+            <option>No Teachers Available</option>
+          <% } %>
+        </select>
+
+        <button>Add Subject</button>
+      </form>
+    </div>
+
+    <!-- TABLE -->
+    <h3>Subject List</h3>
+
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Code</th>
+        <th>Department</th>
+        <th>Teacher</th>
+        <th>Action</th>
+      </tr>
+
+      <% subjects.forEach(s => { %>
         <tr>
-          <td><%= i + 1 %></td>
           <td><%= s.subjectName %></td>
           <td><%= s.subjectCode %></td>
           <td><%= s.department %></td>
           <td><%= s.assignedTeacher %></td>
+
           <td>
-            <form method="POST" action="/subjects/<%= s._id %>?_method=DELETE">
-              <button type="submit">Delete</button>
-            </form>
+            <button class="btn edit">Edit</button>
+            <button class="btn delete">Delete</button>
           </td>
         </tr>
       <% }) %>
-    <% } else { %>
-      <tr>
-        <td colspan="6">No subjects found</td>
-      </tr>
-    <% } %>
-  </table>
+
+    </table>
+
+  </div>
+
+</div>
 
 </body>
 </html>

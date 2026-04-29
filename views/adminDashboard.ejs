@@ -1,36 +1,194 @@
-<!doctype html>
-<html>
-<head><meta charset="utf-8"><title>Admin Dashboard</title></head>
-<body style="font-family:Arial;margin:0">
-  <%- include('partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <main style="padding:24px">
-    <h1>Admin Dashboard</h1>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
-      <div style="padding:16px;background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.06)">
-        <h3>Students</h3>
-        <p style="font-size:24px;font-weight:700"><%= totalStudents %></p>
-        <p><a href="/students">Manage Students</a></p>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f7fa;
+  }
+
+  /* HEADER */
+  header {
+    background: #0a2540;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  header h2 {
+    margin: 0;
+  }
+
+  .logout {
+    background: #f44336;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+
+  /* LAYOUT */
+  .container {
+    display: flex;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 230px;
+    background: #0a2540;
+    color: white;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .sidebar h3 {
+    color: #4caf50;
+    margin-bottom: 20px;
+  }
+
+  .sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 6px;
+    transition: 0.3s;
+  }
+
+  .sidebar a:hover {
+    background: #4caf50;
+  }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    padding: 30px;
+  }
+
+  .main h1 {
+    margin-bottom: 20px;
+  }
+
+  /* CARDS */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: 0.2s;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card h2 {
+    margin: 10px 0;
+    color: #0a2540;
+  }
+
+  .card p {
+    color: #666;
+  }
+
+  /* COLORS */
+  .students { border-left: 6px solid #4caf50; }
+  .teachers { border-left: 6px solid #2196f3; }
+  .subjects { border-left: 6px solid #ff9800; }
+  .exams { border-left: 6px solid #9c27b0; }
+  .fees { border-left: 6px solid #f44336; }
+  .hostel { border-left: 6px solid #009688; }
+  .tt { border-left: 6px solid #795548; }
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>🎓 ERP Admin</h2>
+  <a href="/login" class="logout">Logout</a>
+</header>
+
+<div class="container">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h3>Menu</h3>
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/students">Students</a>
+    <a href="/teachers">Teachers</a>
+    <a href="/subjects">Subjects</a>
+    <a href="/exams">Exams</a>
+    <a href="/fees">Fees</a>
+    <a href="/hostels">Hostel</a>
+    <a href="/timetables">Timetable</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <h1>Welcome Admin 👋</h1>
+
+    <div class="cards">
+
+      <div class="card students" onclick="location.href='/students'">
+        <h2><%= totalStudents %></h2>
+        <p>Students</p>
       </div>
-      <div style="padding:16px;background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.06)">
-        <h3>Teachers</h3>
-        <p style="font-size:24px;font-weight:700"><%= totalTeachers %></p>
-        <p><a href="/teachers">Manage Teachers</a></p>
+
+      <div class="card teachers" onclick="location.href='/teachers'">
+        <h2><%= totalTeachers %></h2>
+        <p>Teachers</p>
       </div>
-      <div style="padding:16px;background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.06)">
-        <h3>Subjects</h3>
-        <p style="font-size:24px;font-weight:700"><%= totalSubjects %></p>
-        <p><a href="/subjects">Manage Subjects</a></p>
+
+      <div class="card subjects" onclick="location.href='/subjects'">
+        <h2><%= totalSubjects %></h2>
+        <p>Subjects</p>
       </div>
-      <div style="padding:16px;background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.06)">
-        <h3>Exams</h3>
-        <p style="font-size:24px;font-weight:700"><%= totalExams %></p>
-        <p><a href="/exams">Manage Exams</a></p>
+
+      <div class="card exams" onclick="location.href='/exams'">
+        <h2><%= totalExams %></h2>
+        <p>Exams</p>
       </div>
+
+      <div class="card fees" onclick="location.href='/fees'">
+        <h2><%= totalFees %></h2>
+        <p>Fees</p>
+      </div>
+
+      <div class="card hostel" onclick="location.href='/hostels'">
+        <h2><%= totalHostel %></h2>
+        <p>Hostel</p>
+      </div>
+
+      <div class="card tt" onclick="location.href='/timetables'">
+        <h2><%= totalTimetables %></h2>
+        <p>Timetable</p>
+      </div>
+
     </div>
-  </main>
 
-  <%- include('partials/footer') %>
+  </div>
+
+</div>
+
 </body>
 </html>
-

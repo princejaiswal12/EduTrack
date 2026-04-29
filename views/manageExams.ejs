@@ -1,59 +1,209 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Manage Exams</title>
+<meta charset="UTF-8">
+<title>Manage Exams</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f7fa;
+  }
+
+  header {
+    background: #0a2540;
+    color: white;
+    padding: 15px 30px;
+  }
+
+  .container {
+    display: flex;
+  }
+
+  .sidebar {
+    width: 220px;
+    background: #0a2540;
+    color: white;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .sidebar h3 { color: #4caf50; }
+
+  .sidebar a {
+    display: block;
+    margin: 10px 0;
+    color: white;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 6px;
+  }
+
+  .sidebar a:hover { background: #4caf50; }
+
+  .main {
+    flex: 1;
+    padding: 25px;
+  }
+
+  /* FORM */
+  .form-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+  }
+
+  .form-card input, .form-card select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  .form-card button {
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+  }
+
+  th {
+    background: #0a2540;
+    color: white;
+    padding: 12px;
+  }
+
+  td {
+    padding: 10px;
+    text-align: center;
+  }
+
+  tr:nth-child(even) { background: #f9f9f9; }
+
+  .btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+  }
+
+  .edit { background: #2196f3; }
+  .delete { background: #f44336; }
+
+</style>
 </head>
-<body style="font-family:Arial">
 
-  <h1>Manage Exams</h1>
+<body>
 
-  <form method="POST" action="/exams">
-    <label>Exam Name</label>
-    <input name="exam[examName]" required>
+<header>
+  <h2>📝 Manage Exams</h2>
+</header>
 
-    <label>Date</label>
-    <input type="date" name="exam[examDate]" required>
+<div class="container">
 
-    <label>Class</label>
-    <input name="exam[class]" required>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h3>Admin</h3>
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/students">Students</a>
+    <a href="/teachers">Teachers</a>
+    <a href="/subjects">Subjects</a>
+    <a href="/exams">Exams</a>
+  </div>
 
-    <label>Subject</label>
-    <input name="exam[subject]" required>
+  <!-- MAIN -->
+  <div class="main">
 
-    <label>Type</label>
-    <input name="exam[examType]" required>
+    <!-- FORM -->
+    <div class="form-card">
+      <h3>Add Exam</h3>
 
-    <button type="submit">Save Exam</button>
-  </form>
+      <form method="POST" action="/exams">
 
-  <hr>
+        <input name="exam[examName]" placeholder="Exam Name" required>
+        <input type="date" name="exam[examDate]" required>
 
-  <table border="1" cellpadding="8">
-    <tr>
-      <th>#</th>
-      <th>Name</th>
-      <th>Date</th>
-      <th>Class</th>
-      <th>Subject</th>
-      <th>Type</th>
-    </tr>
+        <select name="exam[class]">
+          <option>Class 10</option>
+          <option>Class 11</option>
+          <option>Class 12</option>
+          <option>B.Sc</option>
+          <option>B.Com</option>
+        </select>
 
-    <% if (exams.length > 0) { %>
-      <% exams.forEach((e, i) => { %>
+        <select name="exam[subject]">
+          <% if (subjects && subjects.length > 0) { %>
+            <% subjects.forEach(s => { %>
+              <option><%= s.subjectName %></option>
+            <% }) %>
+          <% } else { %>
+            <option>No Subjects</option>
+          <% } %>
+        </select>
+
+        <select name="exam[examType]">
+          <option>Mid Term</option>
+          <option>Final</option>
+          <option>Unit Test</option>
+          <option>Practical</option>
+        </select>
+
+        <button>Add Exam</button>
+      </form>
+    </div>
+
+    <!-- TABLE -->
+    <h3>Exam List</h3>
+
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Class</th>
+        <th>Subject</th>
+        <th>Type</th>
+        <th>Action</th>
+      </tr>
+
+      <% exams.forEach(e => { %>
         <tr>
-          <td><%= i + 1 %></td>
           <td><%= e.examName %></td>
-          <td><%= e.examDate?.toDateString() %></td>
+          <td><%= e.examDate.toDateString() %></td>
           <td><%= e.class %></td>
           <td><%= e.subject %></td>
           <td><%= e.examType %></td>
+
+          <td>
+            <button class="btn edit">Edit</button>
+            <button class="btn delete">Delete</button>
+          </td>
         </tr>
       <% }) %>
-    <% } else { %>
-      <tr><td colspan="6">No exams found</td></tr>
-    <% } %>
-  </table>
+
+    </table>
+
+  </div>
+
+</div>
 
 </body>
 </html>

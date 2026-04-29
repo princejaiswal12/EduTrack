@@ -1,44 +1,221 @@
-<!doctype html>
-<html>
-<head><meta charset="utf-8"><title>Manage Teachers</title></head>
-<body style="font-family:Arial;margin:0">
-  <%- include('partials/header') %>
-  <main style="padding:24px">
-    <h1>Manage Teachers</h1>
-    <section style="background:#fff;padding:16px;border-radius:10px;margin-bottom:20px">
-      <form action="/teachers" method="POST" enctype="multipart/form-data">
-        <label>Photo</label><input type="file" name="teacherPhoto"><br>
-        <label>Full Name</label><input name="teacher[fullName]" required><br>
-        <label>Email</label><input type="email" name="teacher[email]" required><br>
-        <label>Phone</label><input name="teacher[phone]" required><br>
-        <label>Subject</label><input name="teacher[subject]" required><br>
-        <label>Department</label><input name="teacher[department]" required><br>
-        <button type="submit">Save Teacher</button>
-      </form>
-    </section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Manage Teachers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <section style="background:#fff;padding:16px;border-radius:10px">
-      <h3>Teachers List</h3>
-      <table style="width:100%;border-collapse:collapse" cellpadding="8">
-        <thead><tr style="background:#eee"><th>#</th><th>Name</th><th>Email</th><th>Subject</th></tr></thead>
-        <tbody>
-          <% if (teachers && teachers.length > 0) { %>
-            <% teachers.forEach((t,i)=>{ %>
-              <tr>
-                <td><%= i+1 %></td>
-                <td><a href="/teachers/<%= t._id %>/dashboard"><%= t.fullName %></a></td>
-                <td><%= t.email %></td>
-                <td><%= t.subject %></td>
-              </tr>
-            <% }) %>
-          <% } else { %>
-            <tr><td colspan="4">No teachers</td></tr>
-          <% } %>
-        </tbody>
-      </table>
-    </section>
-  </main>
-  <%- include('partials/footer') %>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f7fa;
+  }
+
+  /* HEADER */
+  header {
+    background: #0a2540;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* LAYOUT */
+  .container {
+    display: flex;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 220px;
+    background: #0a2540;
+    color: white;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .sidebar h3 {
+    color: #4caf50;
+  }
+
+  .sidebar a {
+    display: block;
+    margin: 10px 0;
+    color: white;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 6px;
+  }
+
+  .sidebar a:hover {
+    background: #4caf50;
+  }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    padding: 25px;
+  }
+
+  /* FORM CARD */
+  .form-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+  }
+
+  .form-card input, .form-card select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  .form-card button {
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+  }
+
+  th {
+    background: #0a2540;
+    color: white;
+    padding: 12px;
+  }
+
+  td {
+    padding: 10px;
+    text-align: center;
+  }
+
+  tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+
+  .btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+  }
+
+  .edit { background: #2196f3; }
+  .delete { background: #f44336; }
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>👩‍🏫 Manage Teachers</h2>
+</header>
+
+<div class="container">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h3>Admin</h3>
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/students">Students</a>
+    <a href="/teachers">Teachers</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- ADD TEACHER FORM -->
+    <div class="form-card">
+      <h3>Add Teacher</h3>
+
+      <form method="POST" action="/teachers" enctype="multipart/form-data">
+
+        <input type="file" name="teacherPhoto">
+
+        <input name="teacher[fullName]" placeholder="Full Name" required>
+        <input name="teacher[email]" placeholder="Email" required>
+        <input name="teacher[phone]" placeholder="Phone">
+        <input name="teacher[subject]" placeholder="Subject">
+        
+        <select name="teacher[department]">
+          <option>Science</option>
+          <option>Mathematics</option>
+          <option>Commerce</option>
+          <option>Arts</option>
+          <option>Computer Science</option>
+        </select>
+
+        <button>Add Teacher</button>
+      </form>
+    </div>
+
+    <!-- TEACHER LIST -->
+    <h3>Teacher List</h3>
+
+    <table>
+      <tr>
+        <th>Photo</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Subject</th>
+        <th>Department</th>
+        <th>Action</th>
+      </tr>
+
+      <% teachers.forEach(t => { %>
+        <tr>
+
+          <td>
+            <% if (t.photo && t.photo.data) { %>
+              <img src="data:<%= t.photo.contentType %>;base64,<%= t.photo.data.toString('base64') %>">
+            <% } else { %>
+              <img src="https://via.placeholder.com/50">
+            <% } %>
+          </td>
+
+          <td><%= t.fullName %></td>
+          <td><%= t.email %></td>
+          <td><%= t.subject %></td>
+          <td><%= t.department %></td>
+
+          <td>
+            <button class="btn edit">Edit</button>
+            <button class="btn delete">Delete</button>
+          </td>
+
+        </tr>
+      <% }) %>
+
+    </table>
+
+  </div>
+
+</div>
 
 </body>
 </html>

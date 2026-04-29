@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Login - ERP</title>
+<title>Register - ERP</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
   body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0a2540, #4caf50);
+    background: linear-gradient(135deg, #4caf50, #0a2540);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,7 +41,7 @@
   button {
     width: 100%;
     padding: 12px;
-    background: #4caf50;
+    background: #0a2540;
     color: white;
     border: none;
     border-radius: 6px;
@@ -51,7 +51,7 @@
   }
 
   button:hover {
-    background: #388e3c;
+    background: #071a2d;
   }
 
   .switch {
@@ -59,7 +59,7 @@
   }
 
   .switch a {
-    color: #0a2540;
+    color: #4caf50;
     font-weight: bold;
     text-decoration: none;
   }
@@ -70,25 +70,24 @@
 <body>
 
 <div class="card">
-  <h2>Login</h2>
+  <h2>Register</h2>
 
-  <form method="POST" action="/login">
+  <form method="POST" action="/register">
 
     <select name="role">
-      <option value="admin">Admin</option>
-      <option value="teacher">Teacher</option>
       <option value="student">Student</option>
+      <option value="teacher">Teacher</option>
     </select>
 
-    <input type="text" name="name" placeholder="Enter Name" required>
-    <input type="email" name="email" placeholder="Enter Email" required>
+    <input type="text" name="name" placeholder="Full Name" required>
+    <input type="email" name="email" placeholder="Email" required>
 
-    <button type="submit">Login</button>
+    <button type="submit">Register</button>
   </form>
 
   <div class="switch">
-    Don't have an account?
-    <a href="/register">Register</a>
+    Already have an account?
+    <a href="/login">Login</a>
   </div>
 </div>
 

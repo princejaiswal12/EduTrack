@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ERP System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0a2540, #4caf50);
+    color: white;
+  }
+
+  /* NAVBAR */
+  header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 60px;
+    align-items: center;
+  }
+
+  header h2 {
+    margin: 0;
+  }
+
+  .nav-buttons a {
+    margin-left: 15px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .login-btn {
+    background: white;
+    color: #0a2540;
+  }
+
+  .register-btn {
+    background: #4caf50;
+    color: white;
+  }
+
+  /* HERO */
+  .hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 80px 60px;
+  }
+
+  .hero-text {
+    max-width: 500px;
+  }
+
+  .hero-text h1 {
+    font-size: 42px;
+    margin-bottom: 20px;
+  }
+
+  .hero-text p {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+
+  .cta a {
+    margin-right: 15px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .primary {
+    background: white;
+    color: #0a2540;
+  }
+
+  .secondary {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+  }
+
+  /* FEATURES */
+  .features {
+    background: white;
+    color: #222;
+    padding: 60px;
+    text-align: center;
+  }
+
+  .features h2 {
+    margin-bottom: 40px;
+    color: #0a2540;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 20px;
+    background: #0a2540;
+  }
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+  <h2>🎓 ERP System</h2>
+  <div class="nav-buttons">
+    <a href="/login" class="login-btn">Login</a>
+    <a href="/register" class="register-btn">Register</a>
+  </div>
+</header>
+
+<!-- HERO SECTION -->
+<div class="hero">
+  <div class="hero-text">
+    <h1>Smart Student Management System</h1>
+    <p>
+      Manage students, teachers, exams, fees, hostel and timetable — 
+      all in one powerful ERP platform.
+    </p>
+
+    <div class="cta">
+      <a href="/login" class="primary">Get Started</a>
+      <a href="/register" class="secondary">Create Account</a>
+    </div>
+  </div>
+
+  <div>
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" width="250">
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+  <h2>Features</h2>
+
+  <div class="feature-grid">
+    <div class="card">👨‍🎓 Student Management</div>
+    <div class="card">👩‍🏫 Teacher Dashboard</div>
+    <div class="card">📅 Timetable Scheduling</div>
+    <div class="card">💰 Fee Tracking</div>
+    <div class="card">🏠 Hostel Allocation</div>
+    <div class="card">📝 Exam Management</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 ERP Student Management System</p>
+</footer>
+
+</body>
+</html>
