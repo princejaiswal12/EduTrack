@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Admin Dashboard</title></head>
+<body style="font-family:Arial;margin:0">
+  <%- include('partials/header') %>
+
+  <main style="padding:24px">
+    <h1>Admin Dashboard</h1>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
+      <div style="padding:16px;background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.06)">
+        <h3>Students</h3>
+        <p style="font-size:24px;font-weight:700"><%= totalStudents %></p>
+        <p><a href="/students">Manage Students</a></p>
+      </div>
+      <div style="padding:16px;background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.06)">
+        <h3>Teachers</h3>
+        <p style="font-size:24px;font-weight:700"><%= totalTeachers %></p>
+        <p><a href="/teachers">Manage Teachers</a></p>
+      </div>
+      <div style="padding:16px;background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.06)">
+        <h3>Subjects</h3>
+        <p style="font-size:24px;font-weight:700"><%= totalSubjects %></p>
+        <p><a href="/subjects">Manage Subjects</a></p>
+      </div>
+      <div style="padding:16px;background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.06)">
+        <h3>Exams</h3>
+        <p style="font-size:24px;font-weight:700"><%= totalExams %></p>
+        <p><a href="/exams">Manage Exams</a></p>
+      </div>
+    </div>
+  </main>
+
+  <%- include('partials/footer') %>
+</body>
+</html>
+

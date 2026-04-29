@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Manage Teachers</title></head>
+<body style="font-family:Arial;margin:0">
+  <%- include('partials/header') %>
+  <main style="padding:24px">
+    <h1>Manage Teachers</h1>
+    <section style="background:#fff;padding:16px;border-radius:10px;margin-bottom:20px">
+      <form action="/teachers" method="POST" enctype="multipart/form-data">
+        <label>Photo</label><input type="file" name="teacherPhoto"><br>
+        <label>Full Name</label><input name="teacher[fullName]" required><br>
+        <label>Email</label><input type="email" name="teacher[email]" required><br>
+        <label>Phone</label><input name="teacher[phone]" required><br>
+        <label>Subject</label><input name="teacher[subject]" required><br>
+        <label>Department</label><input name="teacher[department]" required><br>
+        <button type="submit">Save Teacher</button>
+      </form>
+    </section>
+
+    <section style="background:#fff;padding:16px;border-radius:10px">
+      <h3>Teachers List</h3>
+      <table style="width:100%;border-collapse:collapse" cellpadding="8">
+        <thead><tr style="background:#eee"><th>#</th><th>Name</th><th>Email</th><th>Subject</th></tr></thead>
+        <tbody>
+          <% if (teachers && teachers.length > 0) { %>
+            <% teachers.forEach((t,i)=>{ %>
+              <tr>
+                <td><%= i+1 %></td>
+                <td><a href="/teachers/<%= t._id %>/dashboard"><%= t.fullName %></a></td>
+                <td><%= t.email %></td>
+                <td><%= t.subject %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr><td colspan="4">No teachers</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <%- include('partials/footer') %>
+
+</body>
+</html>

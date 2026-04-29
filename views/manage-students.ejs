@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Manage Students</title></head>
+<body style="font-family:Arial;margin:0">
+  <%- include('partials/header') %>
+
+  <main style="padding:24px">
+    <h1>Manage Students</h1>
+
+    <section style="background:#fff;padding:16px;border-radius:10px;margin-bottom:20px">
+      <h3>Add Student</h3>
+      <form action="/students" method="POST" enctype="multipart/form-data">
+        <label>Photo</label><input type="file" name="studentPhoto"><br>
+        <label>Full Name</label><input name="student[fullName]" required><br>
+        <label>Roll Number</label><input name="student[rollNumber]" required><br>
+        <label>Email</label><input type="email" name="student[email]" required><br>
+        <label>Phone</label><input name="student[phone]" required><br>
+        <label>Class</label><input name="student[class]" required><br>
+        <label>Hostel</label><input name="student[hostel]"><br>
+        <button type="submit">Save Student</button>
+      </form>
+    </section>
+
+    <section style="background:#fff;padding:16px;border-radius:10px">
+      <h3>Students List</h3>
+      <table border="0" cellpadding="8" style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="background:#eee"><th>#</th><th>Name</th><th>Roll</th><th>Email</th><th>Phone</th></tr>
+        </thead>
+        <tbody>
+          <% if (students && students.length > 0) { %>
+            <% students.forEach((s, i) => { %>
+              <tr>
+                <td><%= i+1 %></td>
+                <td><a href="/students/<%= s._id %>/dashboard"><%= s.fullName %></a></td>
+                <td><%= s.rollNumber %></td>
+                <td><%= s.email %></td>
+                <td><%= s.phone %></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr><td colspan="5">No students</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <%- include('partials/footer') %>
+
+</body>
+</html>

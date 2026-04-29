@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Manage Exams</title>
+</head>
+<body style="font-family:Arial">
+
+  <h1>Manage Exams</h1>
+
+  <form method="POST" action="/exams">
+    <label>Exam Name</label>
+    <input name="exam[examName]" required>
+
+    <label>Date</label>
+    <input type="date" name="exam[examDate]" required>
+
+    <label>Class</label>
+    <input name="exam[class]" required>
+
+    <label>Subject</label>
+    <input name="exam[subject]" required>
+
+    <label>Type</label>
+    <input name="exam[examType]" required>
+
+    <button type="submit">Save Exam</button>
+  </form>
+
+  <hr>
+
+  <table border="1" cellpadding="8">
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Date</th>
+      <th>Class</th>
+      <th>Subject</th>
+      <th>Type</th>
+    </tr>
+
+    <% if (exams.length > 0) { %>
+      <% exams.forEach((e, i) => { %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= e.examName %></td>
+          <td><%= e.examDate?.toDateString() %></td>
+          <td><%= e.class %></td>
+          <td><%= e.subject %></td>
+          <td><%= e.examType %></td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr><td colspan="6">No exams found</td></tr>
+    <% } %>
+  </table>
+
+</body>
+</html>

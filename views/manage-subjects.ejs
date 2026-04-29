@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage Subjects</title>
+</head>
+<body>
+
+  <h1>Manage Subjects</h1>
+
+  <h3>Add Subject</h3>
+  <form action="/subjects" method="POST">
+    <label>Subject Name</label><br>
+    <input name="subject[subjectName]" required><br><br>
+
+    <label>Subject Code</label><br>
+    <input name="subject[subjectCode]" required><br><br>
+
+    <label>Department</label><br>
+    <input name="subject[department]" required><br><br>
+
+    <label>Assigned Teacher</label><br>
+    <select name="subject[assignedTeacher]" required>
+      <% if (teachers && teachers.length > 0) { %>
+        <% teachers.forEach(t => { %>
+          <option value="<%= t.fullName %>"><%= t.fullName %></option>
+        <% }) %>
+      <% } %>
+    </select><br><br>
+
+    <button type="submit">Save Subject</button>
+  </form>
+
+  <hr>
+
+  <h3>Subjects List</h3>
+  <table border="1" cellpadding="8">
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Code</th>
+      <th>Department</th>
+      <th>Teacher</th>
+      <th>Delete</th>
+    </tr>
+
+    <% if (subjects && subjects.length > 0) { %>
+      <% subjects.forEach((s, i) => { %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= s.subjectName %></td>
+          <td><%= s.subjectCode %></td>
+          <td><%= s.department %></td>
+          <td><%= s.assignedTeacher %></td>
+          <td>
+            <form method="POST" action="/subjects/<%= s._id %>?_method=DELETE">
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    <% } else { %>
+      <tr>
+        <td colspan="6">No subjects found</td>
+      </tr>
+    <% } %>
+  </table>
+
+</body>
+</html>

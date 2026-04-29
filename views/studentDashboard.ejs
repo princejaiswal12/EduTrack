@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Student Dashboard</title></head>
+<body style="font-family:Arial;margin:0">
+  <%- include('partials/header') %>
+  <main style="padding:24px">
+    <h1>Student Dashboard</h1>
+    <div style="display:flex;gap:20px;align-items:center">
+      <div>
+        <% if (photoBase64) { %>
+          <img src="<%= photoBase64 %>" style="width:120px;border-radius:50%" alt="photo">
+        <% } else { %>
+          <img src="/public/default-avatar.png" style="width:120px;border-radius:50%" alt="photo">
+        <% } %>
+      </div>
+      <div>
+        <h2><%= student.fullName %></h2>
+        <p>Roll: <%= student.rollNumber %></p>
+        <p>Class: <%= student.class %></p>
+        <p>Hostel: <%= student.hostel %></p>
+        <p>Email: <%= student.email %></p>
+        <p>Phone: <%= student.phone %></p>
+      </div>
+    </div>
+  </main>
+  <%- include('partials/footer') %>
+
+</body>
+</html>

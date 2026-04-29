@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Teacher Dashboard</title></head>
+<body style="font-family:Arial;margin:0">
+  <%- include('partials/header') %>
+  <main style="padding:24px">
+    <h1>Teacher Dashboard</h1>
+    <div style="display:flex;gap:20px;align-items:center">
+      <div>
+        <% if (photoBase64) { %>
+          <img src="<%= photoBase64 %>" style="width:120px;border-radius:50%" alt="photo">
+        <% } else { %>
+          <img src="/public/default-avatar.png" style="width:120px;border-radius:50%" alt="photo">
+        <% } %>
+      </div>
+      <div>
+        <h2><%= teacher.fullName %></h2>
+        <p>Subject: <%= teacher.subject %></p>
+        <p>Department: <%= teacher.department %></p>
+        <p>Email: <%= teacher.email %></p>
+        <p>Phone: <%= teacher.phone %></p>
+      </div>
+    </div>
+
+    <section style="margin-top:24px">
+      <h3>Assigned Subjects</h3>
+      <% if (assignedSubjects && assignedSubjects.length>0) { %>
+        <ul>
+          <% assignedSubjects.forEach(s => { %>
+            <li><%= s.subjectName %> (<%= s.class || "" %>)</li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p>No assigned subjects</p>
+      <% } %>
+    </section>
+
+    <section style="margin-top:20px">
+      <h3>Timetable</h3>
+      <% if (timetable && timetable.length>0) { %>
+        <table style="width:100%;border-collapse:collapse" cellpadding="8">
+          <thead><tr style="background:#eee"><th>Day</th><th>Time</th><th>Subject</th></tr></thead>
+          <tbody>
+            <% timetable.forEach(row => { %>
+              <tr><td><%= row.day %></td><td><%= row.time %></td><td><%= row.subject %></td></tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <p>No timetable</p>
+      <% } %>
+    </section>
+
+  </main>
+  <%- include('partials/footer') %>
+</body>
+</html>
