@@ -19,20 +19,15 @@
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
   }
 
-  header h2 {
-    margin: 0;
-  }
-
-  .logout {
+  .logout-btn {
     background: #f44336;
-    padding: 8px 16px;
+    border: none;
+    padding: 8px 15px;
     border-radius: 6px;
-    text-decoration: none;
     color: white;
-    font-weight: bold;
+    cursor: pointer;
   }
 
   /* LAYOUT */
@@ -56,12 +51,11 @@
 
   .sidebar a {
     display: block;
+    padding: 10px;
+    margin: 8px 0;
     color: white;
     text-decoration: none;
-    margin: 10px 0;
-    padding: 10px;
     border-radius: 6px;
-    transition: 0.3s;
   }
 
   .sidebar a:hover {
@@ -71,26 +65,23 @@
   /* MAIN */
   .main {
     flex: 1;
-    padding: 30px;
+    padding: 25px;
   }
 
-  .main h1 {
-    margin-bottom: 20px;
-  }
-
-  /* CARDS */
-  .cards {
+  /* STATS */
+  .stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 20px;
+    margin-bottom: 30px;
   }
 
   .card {
     background: white;
-    padding: 25px;
+    padding: 20px;
     border-radius: 12px;
-    box-shadow: 0px 6px 15px rgba(0,0,0,0.1);
     text-align: center;
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
     transition: 0.2s;
     cursor: pointer;
   }
@@ -105,17 +96,30 @@
   }
 
   .card p {
-    color: #666;
+    color: gray;
   }
 
-  /* COLORS */
-  .students { border-left: 6px solid #4caf50; }
-  .teachers { border-left: 6px solid #2196f3; }
-  .subjects { border-left: 6px solid #ff9800; }
-  .exams { border-left: 6px solid #9c27b0; }
-  .fees { border-left: 6px solid #f44336; }
-  .hostel { border-left: 6px solid #009688; }
-  .tt { border-left: 6px solid #795548; }
+  /* QUICK LINKS */
+  .modules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .module {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .module:hover {
+    background: #4caf50;
+    color: white;
+  }
 
 </style>
 </head>
@@ -123,66 +127,83 @@
 <body>
 
 <header>
-  <h2>🎓 ERP Admin</h2>
-  <a href="/login" class="logout">Logout</a>
+  <h2>📊 Admin Dashboard</h2>
+  <button class="logout-btn">Logout</button>
 </header>
 
 <div class="container">
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <h3>Menu</h3>
+    <h3>Admin Panel</h3>
     <a href="/admin/dashboard">Dashboard</a>
     <a href="/students">Students</a>
     <a href="/teachers">Teachers</a>
     <a href="/subjects">Subjects</a>
+    <a href="/timetables">Timetable</a>
     <a href="/exams">Exams</a>
     <a href="/fees">Fees</a>
-    <a href="/hostels">Hostel</a>
-    <a href="/timetables">Timetable</a>
+    <a href="/hostels">Hostels</a>
   </div>
 
   <!-- MAIN -->
   <div class="main">
 
-    <h1>Welcome Admin 👋</h1>
+    <h2>Welcome Admin 👋</h2>
+    <p>Overview of your ERP system</p>
 
-    <div class="cards">
+    <!-- STATS -->
+    <div class="stats">
 
-      <div class="card students" onclick="location.href='/students'">
+      <div class="card">
         <h2><%= totalStudents %></h2>
         <p>Students</p>
       </div>
 
-      <div class="card teachers" onclick="location.href='/teachers'">
+      <div class="card">
         <h2><%= totalTeachers %></h2>
         <p>Teachers</p>
       </div>
 
-      <div class="card subjects" onclick="location.href='/subjects'">
+      <div class="card">
         <h2><%= totalSubjects %></h2>
         <p>Subjects</p>
       </div>
 
-      <div class="card exams" onclick="location.href='/exams'">
+      <div class="card">
         <h2><%= totalExams %></h2>
         <p>Exams</p>
       </div>
 
-      <div class="card fees" onclick="location.href='/fees'">
+      <div class="card">
         <h2><%= totalFees %></h2>
-        <p>Fees</p>
+        <p>Fee Records</p>
       </div>
 
-      <div class="card hostel" onclick="location.href='/hostels'">
+      <div class="card">
         <h2><%= totalHostel %></h2>
-        <p>Hostel</p>
+        <p>Hostels</p>
       </div>
 
-      <div class="card tt" onclick="location.href='/timetables'">
+      <div class="card">
         <h2><%= totalTimetables %></h2>
-        <p>Timetable</p>
+        <p>Timetable Entries</p>
       </div>
+
+    </div>
+
+    <!-- QUICK MODULE ACCESS -->
+    <h3>Manage Modules</h3>
+
+    <div class="modules">
+
+      <div class="module" onclick="location.href='/students'">👨‍🎓 Students</div>
+      <div class="module" onclick="location.href='/teachers'">👩‍🏫 Teachers</div>
+      <div class="module" onclick="location.href='/subjects'">📚 Subjects</div>
+      <div class="module" onclick="location.href='/timetables'">📅 Timetable</div>
+      <div class="module" onclick="location.href='/exams'">📝 Exams</div>
+      <div class="module" onclick="location.href='/fees'">💰 Fees</div>
+      <div class="module" onclick="location.href='/hostels'">🏠 Hostels</div>
 
     </div>
 

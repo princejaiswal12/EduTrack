@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
+
 const hostelSchema = new mongoose.Schema({
-  hostelName: String,
+  hostelName: { type: String, required: true },
   hostelType: String,
   capacity: Number,
   wardenName: String,
   fees: Number
-});
-module.exports = mongoose.model("Hostel", hostelSchema);
+}, { timestamps: true });
 
+module.exports = mongoose.model("Hostel", hostelSchema);

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Manage Fees</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f7fa;
+  }
+
+  header {
+    background: #0a2540;
+    color: white;
+    padding: 15px 30px;
+  }
+
+  .container {
+    display: flex;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 220px;
+    background: #0a2540;
+    color: white;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .sidebar h3 { color: #4caf50; }
+
+  .sidebar a {
+    display: block;
+    margin: 10px 0;
+    color: white;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 6px;
+  }
+
+  .sidebar a:hover { background: #4caf50; }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    padding: 25px;
+  }
+
+  /* FORM */
+  .form-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+  }
+
+  .form-card input, .form-card select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  .form-card button {
+    background: #4caf50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+  }
+
+  th {
+    background: #0a2540;
+    color: white;
+    padding: 12px;
+  }
+
+  td {
+    padding: 10px;
+    text-align: center;
+  }
+
+  tr:nth-child(even) { background: #f9f9f9; }
+
+  /* STATUS */
+  .paid {
+    color: green;
+    font-weight: bold;
+  }
+
+  .pending {
+    color: red;
+    font-weight: bold;
+  }
+
+  /* BUTTONS */
+  .btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+  }
+
+  .edit { background: #2196f3; }
+  .delete { background: #f44336; }
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>💰 Manage Fees</h2>
+</header>
+
+<div class="container">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h3>Admin</h3>
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/students">Students</a>
+    <a href="/teachers">Teachers</a>
+    <a href="/subjects">Subjects</a>
+    <a href="/exams">Exams</a>
+    <a href="/fees">Fees</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- FORM -->
+    <div class="form-card">
+      <h3>Add Fee</h3>
+
+      <form method="POST" action="/fees">
+
+        <select name="fee[studentName]" required>
+          <% if (students && students.length > 0) { %>
+            <% students.forEach(s => { %>
+              <option><%= s.fullName %></option>
+            <% }) %>
+          <% } else { %>
+            <option>No Students</option>
+          <% } %>
+        </select>
+
+        <select name="fee[class]">
+          <option>Class 10</option>
+          <option>Class 11</option>
+          <option>Class 12</option>
+          <option>B.Sc</option>
+          <option>B.Com</option>
+        </select>
+
+        <input type="number" name="fee[amount]" placeholder="Amount" required>
+        <input type="date" name="fee[dueDate]" required>
+
+        <select name="fee[status]">
+          <option value="Paid">Paid</option>
+          <option value="Pending">Pending</option>
+        </select>
+
+        <button>Add Fee</button>
+      </form>
+    </div>
+
+    <!-- TABLE -->
+    <h3>Fee Records</h3>
+
+    <table>
+      <tr>
+        <th>Student</th>
+        <th>Class</th>
+        <th>Amount</th>
+        <th>Due Date</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+
+      <% fees.forEach(f => { %>
+        <tr>
+          <td><%= f.studentName %></td>
+          <td><%= f.class %></td>
+          <td>₹<%= f.amount %></td>
+          <td><%= new Date(f.dueDate).toDateString() %></td>
+
+          <td class="<%= f.status === 'Paid' ? 'paid' : 'pending' %>">
+            <%= f.status %>
+          </td>
+
+          <td>
+            <button class="btn edit">Edit</button>
+            <button class="btn delete">Delete</button>
+          </td>
+        </tr>
+      <% }) %>
+
+    </table>
+
+  </div>
+
+</div>
+
+</body>
+</html>
