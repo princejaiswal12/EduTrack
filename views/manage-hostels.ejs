@@ -6,122 +6,90 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #f4f7fa;
-  }
+  body { margin:0; font-family:'Segoe UI'; background:#f4f7fa; }
 
   header {
-    background: #0a2540;
-    color: white;
-    padding: 15px 30px;
+    background:#0a2540;
+    color:white;
+    padding:15px 30px;
   }
 
-  .container {
-    display: flex;
-  }
+  .container { display:flex; }
 
-  /* SIDEBAR */
   .sidebar {
-    width: 220px;
-    background: #0a2540;
-    color: white;
-    min-height: 100vh;
-    padding: 20px;
+    width:220px;
+    background:#0a2540;
+    color:white;
+    min-height:100vh;
+    padding:20px;
   }
-
-  .sidebar h3 { color: #4caf50; }
 
   .sidebar a {
-    display: block;
-    margin: 10px 0;
-    color: white;
-    text-decoration: none;
-    padding: 8px;
-    border-radius: 6px;
+    display:block;
+    color:white;
+    margin:10px 0;
+    text-decoration:none;
+    padding:8px;
+    border-radius:6px;
   }
 
-  .sidebar a:hover { background: #4caf50; }
+  .sidebar a:hover { background:#4caf50; }
 
-  /* MAIN */
-  .main {
-    flex: 1;
-    padding: 25px;
+  .main { flex:1; padding:25px; }
+
+  .card {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 5px 12px rgba(0,0,0,0.1);
   }
 
-  /* FORM */
-  .form-card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+  input, select {
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:6px;
+    border:1px solid #ccc;
   }
 
-  .form-card input, .form-card select {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+  .add-btn {
+    background:#4caf50;
+    color:white;
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:6px;
   }
 
-  .form-card button {
-    background: #4caf50;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    width: 100%;
-    cursor: pointer;
-  }
-
-  /* TABLE */
   table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
   }
 
   th {
-    background: #0a2540;
-    color: white;
-    padding: 12px;
+    background:#0a2540;
+    color:white;
+    padding:10px;
   }
 
   td {
-    padding: 10px;
-    text-align: center;
+    padding:10px;
+    text-align:center;
   }
 
-  tr:nth-child(even) { background: #f9f9f9; }
-
-  /* STATUS BADGE */
-  .badge {
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    color: white;
-  }
-
-  .available { background: green; }
-  .full { background: red; }
-
-  /* BUTTONS */
   .btn {
-    padding: 6px 10px;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
+    padding:6px 10px;
+    border:none;
+    color:white;
+    border-radius:6px;
   }
 
-  .edit { background: #2196f3; }
-  .delete { background: #f44336; }
+  .edit { background:#2196f3; }
+  .delete { background:#f44336; }
 
 </style>
 </head>
@@ -134,84 +102,78 @@
 
 <div class="container">
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <h3>Admin</h3>
-    <a href="/admin/dashboard">Dashboard</a>
-    <a href="/students">Students</a>
-    <a href="/teachers">Teachers</a>
-    <a href="/subjects">Subjects</a>
-    <a href="/exams">Exams</a>
-    <a href="/fees">Fees</a>
-    <a href="/hostels">Hostels</a>
-  </div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <a href="/admin/dashboard">Dashboard</a>
+  <a href="/students">Students</a>
+  <a href="/teachers">Teachers</a>
+  <a href="/hostels">Hostels</a>
+</div>
 
-  <!-- MAIN -->
-  <div class="main">
+<!-- MAIN -->
+<div class="main">
 
-    <!-- FORM -->
-    <div class="form-card">
-      <h3>Add Hostel</h3>
+<!-- ADD HOSTEL -->
+<div class="card">
+  <h3>Add Hostel</h3>
 
-      <form method="POST" action="/hostels">
+  <form action="/hostels" method="POST">
 
-        <input name="hostel[hostelName]" placeholder="Hostel Name" required>
+    <input name="hostel[hostelName]" placeholder="Hostel Name" required>
 
-        <select name="hostel[hostelType]">
-          <option>Boys</option>
-          <option>Girls</option>
-          <option>Co-ed</option>
-        </select>
+    <select name="hostel[hostelType]">
+      <option>Boys</option>
+      <option>Girls</option>
+      <option>Co-ed</option>
+    </select>
 
-        <input type="number" name="hostel[capacity]" placeholder="Capacity" required>
-        <input name="hostel[wardenName]" placeholder="Warden Name" required>
-        <input type="number" name="hostel[fees]" placeholder="Monthly Fees" required>
+    <input type="number" name="hostel[capacity]" placeholder="Capacity">
 
-        <button>Add Hostel</button>
-      </form>
-    </div>
+    <input name="hostel[wardenName]" placeholder="Warden Name">
 
-    <!-- TABLE -->
-    <h3>Hostel List</h3>
+    <input type="number" name="hostel[fees]" placeholder="Monthly Fees">
 
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Capacity</th>
-        <th>Warden</th>
-        <th>Fees</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
+    <button class="add-btn">Add Hostel</button>
+  </form>
+</div>
 
-      <% hostels.forEach(h => { %>
-        <tr>
-          <td><%= h.hostelName %></td>
-          <td><%= h.hostelType %></td>
-          <td><%= h.capacity %></td>
-          <td><%= h.wardenName %></td>
-          <td>₹<%= h.fees %></td>
+<!-- HOSTEL TABLE -->
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Capacity</th>
+    <th>Warden</th>
+    <th>Fees</th>
+    <th>Action</th>
+  </tr>
 
-          <td>
-            <% if (h.capacity > 0) { %>
-              <span class="badge available">Available</span>
-            <% } else { %>
-              <span class="badge full">Full</span>
-            <% } %>
-          </td>
+  <% hostels.forEach(h => { %>
+    <tr>
+      <td><%= h.hostelName %></td>
+      <td><%= h.hostelType %></td>
+      <td><%= h.capacity %></td>
+      <td><%= h.wardenName %></td>
+      <td>₹<%= h.fees %></td>
 
-          <td>
-            <button class="btn edit">Edit</button>
-            <button class="btn delete">Delete</button>
-          </td>
-        </tr>
-      <% }) %>
+      <td>
+        <!-- EDIT -->
+        <a href="/hostels/<%= h._id %>/edit">
+          <button class="btn edit">Edit</button>
+        </a>
 
-    </table>
+        <!-- DELETE -->
+        <form action="/hostels/<%= h._id %>?_method=DELETE"
+              method="POST" style="display:inline;">
+          <button class="btn delete">Delete</button>
+        </form>
+      </td>
+    </tr>
+  <% }) %>
 
-  </div>
+</table>
 
+</div>
 </div>
 
 </body>

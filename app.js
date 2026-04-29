@@ -22,12 +22,12 @@ const Exam = require("./models/Exam");
 const PORT = process.env.PORT || 5000;
 const MONGO = process.env.MONGO_URI;
 
-// ================= DB CONNECT =================
+// ================= DB =================
 mongoose.connect(MONGO)
-.then(() => console.log("✅ MongoDB Connected"))
-.catch(err => console.log("❌ DB Error:", err.message));
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch(err => console.log("❌ DB Error:", err.message));
 
-// ================= VIEW ENGINE =================
+// ================= VIEW =================
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -43,15 +43,11 @@ const upload = multer({ storage });
 
 // ================= ROUTES =================
 
-// ---------- HOME ----------
-app.get("/", (req, res) => {
-  res.render("home");
-});
+// HOME
+app.get("/", (req, res) => res.render("home"));
 
-// ---------- LOGIN ----------
-app.get("/login", (req, res) => {
-  res.render("login");
-});
+// LOGIN
+app.get("/login", (req, res) => res.render("login"));
 
 app.post("/login", async (req, res) => {
   const { role, name, email } = req.body;
@@ -77,70 +73,76 @@ app.post("/login", async (req, res) => {
 
   } catch (err) {
     console.log(err);
-    res.send("Error");
+    res.send("Login error");
   }
 });
 
-// ---------- REGISTER ----------
-app.get("/register", (req, res) => {
-  res.render("register");
-});
+// REGISTER
+app.get("/register", (req, res) => res.render("register"));
 
 app.post("/register", async (req, res) => {
-  const { role, name, email } = req.body;
-
   try {
+    const { role, name, email } = req.body;
+
     if (role === "admin") {
-      await Admin.create({ name, email });
+      await Admin.create({
+        name,
+        email
+      });
     }
 
     if (role === "teacher") {
-      await Teacher.create({ fullName: name, email });
+      await Teacher.create({
+        fullName: name,
+        email,
+        phone: req.body.phone,
+        subject: req.body.subject,
+        department: req.body.department
+      });
     }
 
     if (role === "student") {
-      await Student.create({ fullName: name, email });
+      await Student.create({
+        fullName: name,
+        email,
+        rollNumber: req.body.rollNumber,
+        phone: req.body.phone,
+        class: req.body.class,
+        hostel: req.body.hostel
+      });
     }
 
     res.redirect("/login");
 
   } catch (err) {
     console.log(err);
-    res.send("Register error");
+    res.send("Registration error");
   }
 });
 
 // ================= ADMIN DASHBOARD =================
 app.get("/admin/dashboard", async (req, res) => {
-  const totalStudents = await Student.countDocuments();
-  const totalTeachers = await Teacher.countDocuments();
-  const totalSubjects = await Subject.countDocuments();
-  const totalExams = await Exam.countDocuments();
-  const totalFees = await Fee.countDocuments();
-  const totalHostel = await Hostel.countDocuments();
-  const totalTimetables = await Timetable.countDocuments();
-
   res.render("adminDashboard", {
-    totalStudents,
-    totalTeachers,
-    totalSubjects,
-    totalExams,
-    totalFees,
-    totalHostel,
-    totalTimetables
+    totalStudents: await Student.countDocuments(),
+    totalTeachers: await Teacher.countDocuments(),
+    totalSubjects: await Subject.countDocuments(),
+    totalExams: await Exam.countDocuments(),
+    totalFees: await Fee.countDocuments(),
+    totalHostel: await Hostel.countDocuments(),
+    totalTimetables: await Timetable.countDocuments()
   });
 });
 
+
 // ================= STUDENTS =================
 app.get("/students", async (req, res) => {
-  const students = await Student.find().lean();
-  res.render("manage-students", { students });
+  res.render("manage-students", {
+    students: await Student.find().lean()
+  });
 });
 
 app.post("/students", upload.single("studentPhoto"), async (req, res) => {
-  const { student } = req.body;
-
-  const newStudent = new Student(student);
+  const newStudent = new Student(req.body.student);
 
   if (req.file) {
     newStudent.photo = {
@@ -150,6 +152,22 @@ app.post("/students", upload.single("studentPhoto"), async (req, res) => {
   }
 
   await newStudent.save();
+  res.redirect("/students");
+});
+
+app.get("/students/:id/edit", async (req, res) => {
+  res.render("edit-student", {
+    student: await Student.findById(req.params.id).lean()
+  });
+});
+
+app.put("/students/:id", async (req, res) => {
+  await Student.findByIdAndUpdate(req.params.id, req.body.student);
+  res.redirect("/students");
+});
+
+app.delete("/students/:id", async (req, res) => {
+  await Student.findByIdAndDelete(req.params.id);
   res.redirect("/students");
 });
 
@@ -164,16 +182,16 @@ app.get("/students/:id/dashboard", async (req, res) => {
   res.render("studentDashboard", { student, photoBase64 });
 });
 
+
 // ================= TEACHERS =================
 app.get("/teachers", async (req, res) => {
-  const teachers = await Teacher.find().lean();
-  res.render("manage-teachers", { teachers });
+  res.render("manage-teachers", {
+    teachers: await Teacher.find().lean()
+  });
 });
 
 app.post("/teachers", upload.single("teacherPhoto"), async (req, res) => {
-  const { teacher } = req.body;
-
-  const newTeacher = new Teacher(teacher);
+  const newTeacher = new Teacher(req.body.teacher);
 
   if (req.file) {
     newTeacher.photo = {
@@ -183,7 +201,23 @@ app.post("/teachers", upload.single("teacherPhoto"), async (req, res) => {
   }
 
   await newTeacher.save();
-  res.redirect(`/teachers/${newTeacher._id}/dashboard`);
+  res.redirect("/teachers");
+});
+
+app.get("/teachers/:id/edit", async (req, res) => {
+  res.render("edit-teacher", {
+    teacher: await Teacher.findById(req.params.id).lean()
+  });
+});
+
+app.put("/teachers/:id", async (req, res) => {
+  await Teacher.findByIdAndUpdate(req.params.id, req.body.teacher);
+  res.redirect("/teachers");
+});
+
+app.delete("/teachers/:id", async (req, res) => {
+  await Teacher.findByIdAndDelete(req.params.id);
+  res.redirect("/teachers");
 });
 
 app.get("/teachers/:id/dashboard", async (req, res) => {
@@ -194,23 +228,21 @@ app.get("/teachers/:id/dashboard", async (req, res) => {
     photoBase64 = `data:${teacher.photo.contentType};base64,${teacher.photo.data.toString("base64")}`;
   }
 
-  const assignedSubjects = await Subject.find({ assignedTeacher: teacher.fullName }).lean();
-  const timetable = await Timetable.find({ teacher: teacher.fullName }).lean();
-
   res.render("teacherDashboard", {
     teacher,
     photoBase64,
-    assignedSubjects,
-    timetable
+    assignedSubjects: await Subject.find({ assignedTeacher: teacher.fullName }),
+    timetable: await Timetable.find({ teacher: teacher.fullName })
   });
 });
 
+
 // ================= SUBJECTS =================
 app.get("/subjects", async (req, res) => {
-  const subjects = await Subject.find().lean();
-  const teachers = await Teacher.find().lean();
-
-  res.render("manage-subjects", { subjects, teachers });
+  res.render("manage-subjects", {
+    subjects: await Subject.find().lean(),
+    teachers: await Teacher.find().lean()
+  });
 });
 
 app.post("/subjects", async (req, res) => {
@@ -218,12 +250,29 @@ app.post("/subjects", async (req, res) => {
   res.redirect("/subjects");
 });
 
+app.get("/subjects/:id/edit", async (req, res) => {
+  res.render("edit-subject", {
+    subject: await Subject.findById(req.params.id).lean()
+  });
+});
+
+app.put("/subjects/:id", async (req, res) => {
+  await Subject.findByIdAndUpdate(req.params.id, req.body.subject);
+  res.redirect("/subjects");
+});
+
+app.delete("/subjects/:id", async (req, res) => {
+  await Subject.findByIdAndDelete(req.params.id);
+  res.redirect("/subjects");
+});
+
+
 // ================= EXAMS =================
 app.get("/exams", async (req, res) => {
-  const exams = await Exam.find().lean();
-  const subjects = await Subject.find().lean();
-
-  res.render("manage-exams", { exams, subjects });
+  res.render("manage-exams", {
+    exams: await Exam.find().lean(),
+    subjects: await Subject.find().lean()
+  });
 });
 
 app.post("/exams", async (req, res) => {
@@ -231,12 +280,29 @@ app.post("/exams", async (req, res) => {
   res.redirect("/exams");
 });
 
+app.get("/exams/:id/edit", async (req, res) => {
+  res.render("edit-exam", {
+    exam: await Exam.findById(req.params.id).lean()
+  });
+});
+
+app.put("/exams/:id", async (req, res) => {
+  await Exam.findByIdAndUpdate(req.params.id, req.body.exam);
+  res.redirect("/exams");
+});
+
+app.delete("/exams/:id", async (req, res) => {
+  await Exam.findByIdAndDelete(req.params.id);
+  res.redirect("/exams");
+});
+
+
 // ================= FEES =================
 app.get("/fees", async (req, res) => {
-  const fees = await Fee.find().lean();
-  const students = await Student.find().lean();
-
-  res.render("manage-fees", { fees, students });
+  res.render("manage-fees", {
+    fees: await Fee.find().lean(),
+    students: await Student.find().lean()
+  });
 });
 
 app.post("/fees", async (req, res) => {
@@ -244,10 +310,28 @@ app.post("/fees", async (req, res) => {
   res.redirect("/fees");
 });
 
+app.get("/fees/:id/edit", async (req, res) => {
+  res.render("edit-fee", {
+    fee: await Fee.findById(req.params.id).lean()
+  });
+});
+
+app.put("/fees/:id", async (req, res) => {
+  await Fee.findByIdAndUpdate(req.params.id, req.body.fee);
+  res.redirect("/fees");
+});
+
+app.delete("/fees/:id", async (req, res) => {
+  await Fee.findByIdAndDelete(req.params.id);
+  res.redirect("/fees");
+});
+
+
 // ================= HOSTELS =================
 app.get("/hostels", async (req, res) => {
-  const hostels = await Hostel.find().lean();
-  res.render("manage-hostels", { hostels });
+  res.render("manage-hostels", {
+    hostels: await Hostel.find().lean()
+  });
 });
 
 app.post("/hostels", async (req, res) => {
@@ -255,13 +339,30 @@ app.post("/hostels", async (req, res) => {
   res.redirect("/hostels");
 });
 
+app.get("/hostels/:id/edit", async (req, res) => {
+  res.render("edit-hostel", {
+    hostel: await Hostel.findById(req.params.id).lean()
+  });
+});
+
+app.put("/hostels/:id", async (req, res) => {
+  await Hostel.findByIdAndUpdate(req.params.id, req.body.hostel);
+  res.redirect("/hostels");
+});
+
+app.delete("/hostels/:id", async (req, res) => {
+  await Hostel.findByIdAndDelete(req.params.id);
+  res.redirect("/hostels");
+});
+
+
 // ================= TIMETABLE =================
 app.get("/timetables", async (req, res) => {
-  const timetables = await Timetable.find().lean();
-  const teachers = await Teacher.find().lean();
-  const subjects = await Subject.find().lean();
-
-  res.render("manage-timetables", { timetables, teachers, subjects });
+  res.render("manage-timetables", {
+    timetables: await Timetable.find().lean(),
+    teachers: await Teacher.find().lean(),
+    subjects: await Subject.find().lean()
+  });
 });
 
 app.post("/timetables", async (req, res) => {
@@ -269,10 +370,25 @@ app.post("/timetables", async (req, res) => {
   res.redirect("/timetables");
 });
 
-// ================= 404 =================
-app.use((req, res) => {
-  res.status(404).send("Page not found");
+app.get("/timetables/:id/edit", async (req, res) => {
+  res.render("edit-timetable", {
+    timetable: await Timetable.findById(req.params.id).lean()
+  });
 });
+
+app.put("/timetables/:id", async (req, res) => {
+  await Timetable.findByIdAndUpdate(req.params.id, req.body.timetable);
+  res.redirect("/timetables");
+});
+
+app.delete("/timetables/:id", async (req, res) => {
+  await Timetable.findByIdAndDelete(req.params.id);
+  res.redirect("/timetables");
+});
+
+
+// ================= 404 =================
+app.use((req, res) => res.send("Page not found"));
 
 // ================= SERVER =================
 app.listen(PORT, () => {

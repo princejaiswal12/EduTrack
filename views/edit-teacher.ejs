@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Teacher</title>
+</head>
+<body>
+
+<h2>Edit Teacher</h2>
+
+<form action="/teachers/<%= teacher._id %>?_method=PUT" method="POST">
+
+  <input name="teacher[fullName]" value="<%= teacher.fullName %>">
+  <input name="teacher[email]" value="<%= teacher.email %>">
+  <input name="teacher[phone]" value="<%= teacher.phone %>">
+  <input name="teacher[subject]" value="<%= teacher.subject %>">
+  <input name="teacher[department]" value="<%= teacher.department %>">
+
+  <button>Update</button>
+
+</form>
+
+</body>
+</html>

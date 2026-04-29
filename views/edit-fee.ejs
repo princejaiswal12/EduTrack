@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Fee</title>
+</head>
+<body>
+
+<h2>Edit Fee</h2>
+
+<form action="/fees/<%= fee._id %>?_method=PUT" method="POST">
+
+  <input name="fee[studentName]" value="<%= fee.studentName %>">
+  <input name="fee[class]" value="<%= fee.class %>">
+  <input name="fee[amount]" value="<%= fee.amount %>">
+
+  <input type="date"
+         name="fee[dueDate]"
+         value="<%= fee.dueDate.toISOString().split('T')[0] %>">
+
+  <input name="fee[status]" value="<%= fee.status %>">
+
+  <button>Update Fee</button>
+
+</form>
+
+</body>
+</html>

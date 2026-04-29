@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Hostel</title>
+</head>
+<body>
+
+<h2>Edit Hostel</h2>
+
+<form action="/hostels/<%= hostel._id %>?_method=PUT" method="POST">
+
+  <input name="hostel[hostelName]" value="<%= hostel.hostelName %>">
+  <input name="hostel[hostelType]" value="<%= hostel.hostelType %>">
+  <input name="hostel[capacity]" value="<%= hostel.capacity %>">
+  <input name="hostel[wardenName]" value="<%= hostel.wardenName %>">
+  <input name="hostel[fees]" value="<%= hostel.fees %>">
+
+  <button>Update Hostel</button>
+
+</form>
+
+</body>
+</html>

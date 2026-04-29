@@ -2,35 +2,42 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Manage Teachers</title>
+<title>Manage Exams</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
   body { margin:0; font-family:'Segoe UI'; background:#f4f7fa; }
 
   header {
-    background:#0a2540; color:white;
+    background:#0a2540;
+    color:white;
     padding:15px 30px;
   }
 
   .container { display:flex; }
 
   .sidebar {
-    width:220px; background:#0a2540; color:white;
-    min-height:100vh; padding:20px;
+    width:220px;
+    background:#0a2540;
+    color:white;
+    min-height:100vh;
+    padding:20px;
   }
 
   .sidebar a {
-    display:block; color:white;
-    margin:10px 0; text-decoration:none;
-    padding:8px; border-radius:6px;
+    display:block;
+    color:white;
+    margin:10px 0;
+    text-decoration:none;
+    padding:8px;
+    border-radius:6px;
   }
 
   .sidebar a:hover { background:#4caf50; }
 
   .main { flex:1; padding:25px; }
 
-  .form-card {
+  .card {
     background:white;
     padding:20px;
     border-radius:12px;
@@ -46,17 +53,13 @@
     border:1px solid #ccc;
   }
 
-  button {
-    padding:10px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-  }
-
   .add-btn {
     background:#4caf50;
     color:white;
     width:100%;
+    padding:10px;
+    border:none;
+    border-radius:6px;
   }
 
   table {
@@ -80,6 +83,7 @@
 
   .btn {
     padding:6px 10px;
+    border:none;
     color:white;
     border-radius:6px;
   }
@@ -93,7 +97,7 @@
 <body>
 
 <header>
-  <h2>👩‍🏫 Manage Teachers</h2>
+  <h2>📝 Manage Exams</h2>
 </header>
 
 <div class="container">
@@ -104,34 +108,43 @@
   <a href="/students">Students</a>
   <a href="/teachers">Teachers</a>
   <a href="/subjects">Subjects</a>
+  <a href="/exams">Exams</a>
 </div>
 
 <!-- MAIN -->
 <div class="main">
 
-<!-- ADD FORM -->
-<div class="form-card">
-  <h3>Add Teacher</h3>
+<!-- ADD EXAM -->
+<div class="card">
+  <h3>Add Exam</h3>
 
-  <form action="/teachers" method="POST" enctype="multipart/form-data">
+  <form action="/exams" method="POST">
 
-    <input type="file" name="teacherPhoto">
+    <input name="exam[examName]" placeholder="Exam Name" required>
 
-    <input name="teacher[fullName]" placeholder="Full Name" required>
-    <input name="teacher[email]" placeholder="Email" required>
-    <input name="teacher[phone]" placeholder="Phone">
+    <input type="date" name="exam[examDate]" required>
 
-    <input name="teacher[subject]" placeholder="Subject">
-
-    <select name="teacher[department]">
-      <option>Science</option>
-      <option>Maths</option>
-      <option>Commerce</option>
-      <option>Arts</option>
-      <option>Computer Science</option>
+    <select name="exam[class]">
+      <option>Class 10</option>
+      <option>Class 11</option>
+      <option>Class 12</option>
+      <option>B.Sc</option>
     </select>
 
-    <button class="add-btn">Add Teacher</button>
+    <select name="exam[subject]">
+      <% subjects.forEach(s => { %>
+        <option><%= s.subjectName %></option>
+      <% }) %>
+    </select>
+
+    <select name="exam[examType]">
+      <option>Mid Term</option>
+      <option>Final</option>
+      <option>Unit Test</option>
+      <option>Practical</option>
+    </select>
+
+    <button class="add-btn">Add Exam</button>
   </form>
 </div>
 
@@ -139,29 +152,29 @@
 <table>
   <tr>
     <th>Name</th>
-    <th>Email</th>
-    <th>Phone</th>
+    <th>Date</th>
+    <th>Class</th>
     <th>Subject</th>
-    <th>Department</th>
+    <th>Type</th>
     <th>Action</th>
   </tr>
 
-  <% teachers.forEach(t => { %>
+  <% exams.forEach(e => { %>
     <tr>
-      <td><%= t.fullName %></td>
-      <td><%= t.email %></td>
-      <td><%= t.phone %></td>
-      <td><%= t.subject %></td>
-      <td><%= t.department %></td>
+      <td><%= e.examName %></td>
+      <td><%= e.examDate.toISOString().split("T")[0] %></td>
+      <td><%= e.class %></td>
+      <td><%= e.subject %></td>
+      <td><%= e.examType %></td>
 
       <td>
         <!-- EDIT -->
-        <a href="/teachers/<%= t._id %>/edit">
+        <a href="/exams/<%= e._id %>/edit">
           <button class="btn edit">Edit</button>
         </a>
 
         <!-- DELETE -->
-        <form action="/teachers/<%= t._id %>?_method=DELETE"
+        <form action="/exams/<%= e._id %>?_method=DELETE"
               method="POST" style="display:inline;">
           <button class="btn delete">Delete</button>
         </form>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Timetable</title>
+</head>
+<body>
+
+<h2>Edit Timetable</h2>
+
+<form action="/timetables/<%= timetable._id %>?_method=PUT" method="POST">
+
+  <input name="timetable[class]" value="<%= timetable.class %>">
+  <input name="timetable[subject]" value="<%= timetable.subject %>">
+  <input name="timetable[teacher]" value="<%= timetable.teacher %>">
+  <input name="timetable[day]" value="<%= timetable.day %>">
+  <input name="timetable[time]" value="<%= timetable.time %>">
+
+  <button>Update</button>
+
+</form>
+
+</body>
+</html>

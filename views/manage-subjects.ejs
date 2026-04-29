@@ -6,120 +6,90 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #f4f7fa;
-  }
+  body { margin:0; font-family:'Segoe UI'; background:#f4f7fa; }
 
-  /* HEADER */
   header {
-    background: #0a2540;
-    color: white;
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
+    background:#0a2540;
+    color:white;
+    padding:15px 30px;
   }
 
-  /* LAYOUT */
-  .container {
-    display: flex;
-  }
+  .container { display:flex; }
 
-  /* SIDEBAR */
   .sidebar {
-    width: 220px;
-    background: #0a2540;
-    color: white;
-    min-height: 100vh;
-    padding: 20px;
-  }
-
-  .sidebar h3 {
-    color: #4caf50;
+    width:220px;
+    background:#0a2540;
+    color:white;
+    min-height:100vh;
+    padding:20px;
   }
 
   .sidebar a {
-    display: block;
-    margin: 10px 0;
-    color: white;
-    text-decoration: none;
-    padding: 8px;
-    border-radius: 6px;
+    display:block;
+    color:white;
+    margin:10px 0;
+    text-decoration:none;
+    padding:8px;
+    border-radius:6px;
   }
 
-  .sidebar a:hover {
-    background: #4caf50;
+  .sidebar a:hover { background:#4caf50; }
+
+  .main { flex:1; padding:25px; }
+
+  .card {
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    box-shadow:0 5px 12px rgba(0,0,0,0.1);
   }
 
-  /* MAIN */
-  .main {
-    flex: 1;
-    padding: 25px;
+  input, select {
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:6px;
+    border:1px solid #ccc;
   }
 
-  /* FORM */
-  .form-card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+  .add-btn {
+    background:#4caf50;
+    color:white;
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:6px;
   }
 
-  .form-card input, .form-card select {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-  }
-
-  .form-card button {
-    background: #4caf50;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    width: 100%;
-  }
-
-  /* TABLE */
   table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0px 5px 12px rgba(0,0,0,0.1);
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
   }
 
   th {
-    background: #0a2540;
-    color: white;
-    padding: 12px;
+    background:#0a2540;
+    color:white;
+    padding:10px;
   }
 
   td {
-    padding: 10px;
-    text-align: center;
-  }
-
-  tr:nth-child(even) {
-    background: #f9f9f9;
+    padding:10px;
+    text-align:center;
   }
 
   .btn {
-    padding: 6px 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    color: white;
+    padding:6px 10px;
+    border:none;
+    color:white;
+    border-radius:6px;
   }
 
-  .edit { background: #2196f3; }
-  .delete { background: #f44336; }
+  .edit { background:#2196f3; }
+  .delete { background:#f44336; }
 
 </style>
 </head>
@@ -132,79 +102,79 @@
 
 <div class="container">
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <h3>Admin</h3>
-    <a href="/admin/dashboard">Dashboard</a>
-    <a href="/students">Students</a>
-    <a href="/teachers">Teachers</a>
-    <a href="/subjects">Subjects</a>
-  </div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <a href="/admin/dashboard">Dashboard</a>
+  <a href="/students">Students</a>
+  <a href="/teachers">Teachers</a>
+  <a href="/subjects">Subjects</a>
+</div>
 
-  <!-- MAIN -->
-  <div class="main">
+<!-- MAIN -->
+<div class="main">
 
-    <!-- FORM -->
-    <div class="form-card">
-      <h3>Add Subject</h3>
+<!-- ADD SUBJECT -->
+<div class="card">
+  <h3>Add Subject</h3>
 
-      <form method="POST" action="/subjects">
+  <form action="/subjects" method="POST">
 
-        <input name="subject[subjectName]" placeholder="Subject Name" required>
-        <input name="subject[subjectCode]" placeholder="Subject Code" required>
+    <input name="subject[subjectName]" placeholder="Subject Name" required>
+    <input name="subject[subjectCode]" placeholder="Subject Code" required>
 
-        <select name="subject[department]">
-          <option>Science</option>
-          <option>Mathematics</option>
-          <option>Commerce</option>
-          <option>Arts</option>
-          <option>Computer Science</option>
-        </select>
+    <select name="subject[department]">
+      <option>Science</option>
+      <option>Mathematics</option>
+      <option>Commerce</option>
+      <option>Arts</option>
+      <option>Computer Science</option>
+    </select>
 
-        <select name="subject[assignedTeacher]">
-          <% if (teachers && teachers.length > 0) { %>
-            <% teachers.forEach(t => { %>
-              <option><%= t.fullName %></option>
-            <% }) %>
-          <% } else { %>
-            <option>No Teachers Available</option>
-          <% } %>
-        </select>
-
-        <button>Add Subject</button>
-      </form>
-    </div>
-
-    <!-- TABLE -->
-    <h3>Subject List</h3>
-
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Code</th>
-        <th>Department</th>
-        <th>Teacher</th>
-        <th>Action</th>
-      </tr>
-
-      <% subjects.forEach(s => { %>
-        <tr>
-          <td><%= s.subjectName %></td>
-          <td><%= s.subjectCode %></td>
-          <td><%= s.department %></td>
-          <td><%= s.assignedTeacher %></td>
-
-          <td>
-            <button class="btn edit">Edit</button>
-            <button class="btn delete">Delete</button>
-          </td>
-        </tr>
+    <select name="subject[assignedTeacher]">
+      <% teachers.forEach(t => { %>
+        <option><%= t.fullName %></option>
       <% }) %>
+    </select>
 
-    </table>
+    <button class="add-btn">Add Subject</button>
+  </form>
+</div>
 
-  </div>
+<!-- SUBJECT TABLE -->
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Code</th>
+    <th>Department</th>
+    <th>Teacher</th>
+    <th>Action</th>
+  </tr>
 
+  <% subjects.forEach(s => { %>
+    <tr>
+      <td><%= s.subjectName %></td>
+      <td><%= s.subjectCode %></td>
+      <td><%= s.department %></td>
+      <td><%= s.assignedTeacher %></td>
+
+      <td>
+        <!-- EDIT -->
+        <a href="/subjects/<%= s._id %>/edit">
+          <button class="btn edit">Edit</button>
+        </a>
+
+        <!-- DELETE -->
+        <form action="/subjects/<%= s._id %>?_method=DELETE"
+              method="POST" style="display:inline;">
+          <button class="btn delete">Delete</button>
+        </form>
+      </td>
+    </tr>
+  <% }) %>
+
+</table>
+
+</div>
 </div>
 
 </body>

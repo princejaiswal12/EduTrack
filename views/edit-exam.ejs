@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Exam</title>
+</head>
+<body>
+
+<h2>Edit Exam</h2>
+
+<form action="/exams/<%= exam._id %>?_method=PUT" method="POST">
+
+  <input name="exam[examName]" value="<%= exam.examName %>">
+
+  <input type="date"
+         name="exam[examDate]"
+         value="<%= exam.examDate.toISOString().split('T')[0] %>">
+
+  <input name="exam[class]" value="<%= exam.class %>">
+  <input name="exam[subject]" value="<%= exam.subject %>">
+  <input name="exam[examType]" value="<%= exam.examType %>">
+
+  <button>Update Exam</button>
+
+</form>
+
+</body>
+</html>

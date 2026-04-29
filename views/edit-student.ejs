@@ -1,0 +1,11 @@
+<form action="/students/<%= student._id %>?_method=PUT" method="POST">
+
+  <input name="student[fullName]" value="<%= student.fullName %>">
+  <input name="student[email]" value="<%= student.email %>">
+  <input name="student[phone]" value="<%= student.phone %>">
+  <input name="student[class]" value="<%= student.class %>">
+  <input name="student[hostel]" value="<%= student.hostel %>">
+
+  <button>Update</button>
+
+</form>
