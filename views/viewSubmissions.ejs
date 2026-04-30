@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submissions</title>
+
+<style>
+body {
+  font-family:'Segoe UI';
+  background:#f4f7fa;
+  padding:20px;
+}
+
+h2 {
+  margin-bottom:20px;
+}
+
+.card {
+  background:white;
+  padding:20px;
+  margin-bottom:15px;
+  border-radius:10px;
+  box-shadow:0 4px 8px rgba(0,0,0,0.1);
+}
+
+input, textarea {
+  width:100%;
+  margin:5px 0;
+  padding:8px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+button {
+  background:#4caf50;
+  color:white;
+  border:none;
+  padding:8px 12px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+button:hover {
+  background:#388e3c;
+}
+
+.status {
+  font-weight:bold;
+  margin-top:5px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>📄 Submissions for <%= assignment.title %></h2>
+
+<!-- ✅ SAFE CHECK -->
+<% if (!assignment.submissions || assignment.submissions.length === 0) { %>
+  <p>No submissions yet</p>
+<% } %>
+
+<!-- ✅ LOOP SAFE -->
+<% (assignment.submissions || []).forEach((s, i) => { %>
+
+  <div class="card">
+
+    <h3>👨‍🎓 <%= s.studentName %></h3>
+
+    <p>
+      Submitted:
+      <%= s.submittedAt ? s.submittedAt.toISOString().split("T")[0] : "N/A" %>
+    </p>
+
+    <!-- STATUS -->
+    <p class="status">
+      <% if (s.marks !== undefined) { %>
+        ✅ Graded
+      <% } else { %>
+        ⏳ Not Graded
+      <% } %>
+    </p>
+
+    <!-- GRADE FORM -->
+    <form action="/assignments/<%= assignment._id %>/grade/<%= i %>" method="POST">
+
+      <input type="number" name="marks"
+        placeholder="Enter Marks"
+        value="<%= s.marks || '' %>">
+
+      <textarea name="feedback"
+        placeholder="Enter Feedback"><%= s.feedback || '' %></textarea>
+
+      <button>Save Grade</button>
+
+    </form>
+
+  </div>
+
+<% }) %>
+
+</body>
+</html>

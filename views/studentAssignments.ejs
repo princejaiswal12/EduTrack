@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Assignments</title>
+
+<style>
+body { font-family:'Segoe UI'; background:#f4f7fa; padding:20px; }
+
+.card {
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:20px;
+}
+
+button {
+  background:#4caf50;
+  color:white;
+  padding:8px;
+  border:none;
+}
+
+input { margin:10px 0; }
+</style>
+</head>
+
+<body>
+
+<h2>📘 Assignments</h2>
+
+<% assignments.forEach(a => { %>
+
+  <div class="card">
+
+    <h3><%= a.title %></h3>
+    <p><b>Subject:</b> <%= a.subject %></p>
+    <p><b>Due:</b> <%= a.dueDate ? a.dueDate.toISOString().split("T")[0] : "N/A" %></p>
+    <p><%= a.description %></p>
+
+    <!-- SUBMIT -->
+    <form action="/assignments/<%= a._id %>/submit" method="POST" enctype="multipart/form-data">
+
+      <input type="hidden" name="studentName" value="<%= student.fullName %>">
+
+      <input type="file" name="file" required>
+
+      <button>Submit Assignment</button>
+    </form>
+
+    <% 
+        const mySubmission = a.submissions.find(s => s.studentName === student.fullName);
+        %>
+
+        <% if (mySubmission) { %>
+
+        <p style="color:green;">
+            ✅ Submitted
+        </p>
+
+        <% if (mySubmission.marks !== undefined) { %>
+            <p>Marks: <%= mySubmission.marks %></p>
+            <p>Feedback: <%= mySubmission.feedback %></p>
+        <% } else { %>
+            <p>⏳ Not graded yet</p>
+        <% } %>
+
+    <% } %>
+
+  </div>
+
+
+<% }) %>
+
+</body>
+</html>

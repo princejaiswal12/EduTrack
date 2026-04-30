@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Mark Attendance</title>
+
+<style>
+body { font-family:'Segoe UI'; background:#f4f7fa; padding:20px; }
+
+.card {
+  background:white;
+  padding:20px;
+  border-radius:10px;
+}
+
+button {
+  padding:10px;
+  background:#4caf50;
+  color:white;
+  border:none;
+}
+</style>
+</head>
+
+<body>
+
+<h2>📋 Mark Attendance</h2>
+
+<div class="card">
+
+<form action="/attendance" method="POST">
+
+  <input type="hidden" name="teacher" value="<%= teacher.fullName %>">
+
+  <input type="text" name="subject" placeholder="Subject" required>
+
+  <table border="1" cellpadding="10" style="width:100%; margin-top:10px;">
+    <tr>
+      <th>Student</th>
+      <th>Status</th>
+    </tr>
+
+    <% students.forEach(s => { %>
+      <tr>
+        <td><%= s.fullName %></td>
+
+        <td>
+          <select name="records[<%= s.fullName %>]">
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+          </select>
+        </td>
+      </tr>
+    <% }) %>
+
+  </table>
+
+  <br>
+  <button>Submit Attendance</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

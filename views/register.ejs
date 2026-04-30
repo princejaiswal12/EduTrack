@@ -72,14 +72,14 @@ button {
 <!-- STUDENT -->
 <div id="studentFields" class="hidden">
   <input name="rollNumber" placeholder="Roll Number">
-  <input name="phone" placeholder="Phone">
+  <input name="studentPhone" placeholder="Phone">
   <input name="class" placeholder="Class">
   <input name="hostel" placeholder="Hostel">
 </div>
 
 <!-- TEACHER -->
 <div id="teacherFields" class="hidden">
-  <input name="phone" placeholder="Phone">
+  <input name="teacherPhone" placeholder="Phone">
   <input name="subject" placeholder="Subject">
   <input name="department" placeholder="Department">
 </div>
@@ -98,11 +98,21 @@ button {
 function toggleForm() {
   const role = document.getElementById("role").value;
 
-  document.getElementById("studentFields").style.display =
-    role === "student" ? "block" : "none";
+  const student = document.getElementById("studentFields");
+  const teacher = document.getElementById("teacherFields");
 
-  document.getElementById("teacherFields").style.display =
-    role === "teacher" ? "block" : "none";
+  // show/hide
+  student.style.display = role === "student" ? "block" : "none";
+  teacher.style.display = role === "teacher" ? "block" : "none";
+
+  // disable unused inputs (IMPORTANT FIX)
+  student.querySelectorAll("input").forEach(i => {
+    i.disabled = role !== "student";
+  });
+
+  teacher.querySelectorAll("input").forEach(i => {
+    i.disabled = role !== "teacher";
+  });
 }
 </script>
 

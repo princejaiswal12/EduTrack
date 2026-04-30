@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Attendance</title>
+
+<style>
+body { font-family:'Segoe UI'; background:#f4f7fa; padding:20px; }
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+}
+
+th {
+  background:#0a2540;
+  color:white;
+  padding:10px;
+}
+
+td {
+  padding:10px;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<h2>📊 My Attendance</h2>
+
+<table>
+<tr>
+  <th>Date</th>
+  <th>Subject</th>
+  <th>Status</th>
+</tr>
+
+<% attendance.forEach(a => { %>
+<tr>
+  <td><%= a.date.toISOString().split("T")[0] %></td>
+  <td><%= a.subject %></td>
+  <td style="color:<%= a.status === 'Present' ? 'green' : 'red' %>">
+    <%= a.status %>
+  </td>
+</tr>
+<% }) %>
+
+</table>
+
+</body>
+</html>

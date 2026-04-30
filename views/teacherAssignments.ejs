@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Assignments</title>
+
+<style>
+body { font-family:'Segoe UI'; background:#f4f7fa; padding:20px; }
+
+.card {
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:20px;
+}
+
+input, textarea {
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+}
+
+button {
+  padding:10px;
+  background:#4caf50;
+  color:white;
+  border:none;
+}
+</style>
+</head>
+
+<body>
+
+<h2>📘 Upload Assignment</h2>
+
+<div class="card">
+
+<form action="/assignments" method="POST" enctype="multipart/form-data">
+
+  <input type="text" name="assignment[title]" placeholder="Title" required>
+
+  <input type="text" name="assignment[subject]" placeholder="Subject" required>
+
+  <input type="text" name="assignment[teacher]" value="<%= teacher.fullName %>" readonly>
+
+  <textarea name="assignment[description]" placeholder="Description"></textarea>
+
+  <input type="date" name="assignment[dueDate]">
+
+  <input type="file" name="file">
+
+  <button>Upload</button>
+
+</form>
+
+</div>
+
+<h2>📚 Your Assignments</h2>
+
+<% assignments.forEach(a => { %>
+
+  <div class="card">
+
+    <h3><%= a.title %></h3>
+    <p><b>Subject:</b> <%= a.subject %></p>
+
+    <!-- ✅ FIXED: inside loop -->
+    <a href="/assignments/<%= a._id %>/submissions">
+      <button>View Submissions</button>
+    </a>
+
+  </div>
+
+<% }) %>
+
+</body>
+</html>

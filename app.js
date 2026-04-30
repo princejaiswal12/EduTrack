@@ -1,5 +1,7 @@
 require("dotenv").config();
-
+const Assignment = require("./models/Assignment");
+const Marks = require("./models/Marks");
+const Attendance = require("./models/Attendance");
 const express = require("express");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
@@ -95,7 +97,7 @@ app.post("/register", async (req, res) => {
       await Teacher.create({
         fullName: name,
         email,
-        phone: req.body.phone,
+        phone: req.body.teacherPhone,
         subject: req.body.subject,
         department: req.body.department
       });
@@ -106,7 +108,7 @@ app.post("/register", async (req, res) => {
         fullName: name,
         email,
         rollNumber: req.body.rollNumber,
-        phone: req.body.phone,
+        phone: req.body.studentPhone,
         class: req.body.class,
         hostel: req.body.hostel
       });
@@ -115,8 +117,8 @@ app.post("/register", async (req, res) => {
     res.redirect("/login");
 
   } catch (err) {
-    console.log(err);
-    res.send("Registration error");
+    console.error(err);
+    res.send("Registration Error");
   }
 });
 
@@ -172,14 +174,85 @@ app.delete("/students/:id", async (req, res) => {
 });
 
 app.get("/students/:id/dashboard", async (req, res) => {
+  try {
+    const student = await Student.findById(req.params.id).lean();
+
+    if (!student) return res.send("Student not found");
+
+    // Convert photo
+    let photoBase64 = "";
+    if (student.photo?.data) {
+      photoBase64 = `data:${student.photo.contentType};base64,${student.photo.data.toString("base64")}`;
+    }
+
+    // 👉 ADD THIS (timetable fetch)
+    const timetable = await Timetable.find({ class: student.class }).lean();
+
+    // 👉 FINAL RENDER
+    res.render("studentDashboard", {
+      student,
+      photoBase64,
+      timetable
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.send("Server error");
+  }
+});
+
+// VIEW ASSIGNMENTS
+app.get("/students/:id/assignments", async (req, res) => {
   const student = await Student.findById(req.params.id).lean();
 
-  let photoBase64 = "";
-  if (student.photo?.data) {
-    photoBase64 = `data:${student.photo.contentType};base64,${student.photo.data.toString("base64")}`;
-  }
+  const assignments = await Assignment.find({
+    subject: student.class   // match class
+  }).lean();
 
-  res.render("studentDashboard", { student, photoBase64 });
+  res.render("studentAssignments", { student, assignments });
+});
+
+// SUBMIT ASSIGNMENT
+app.post("/assignments/:id/submit", upload.single("file"), async (req, res) => {
+  try {
+    const assignment = await Assignment.findById(req.params.id);
+
+    assignment.submissions.push({
+      studentName: req.body.studentName,
+      file: {
+        data: req.file.buffer,
+        contentType: req.file.mimetype
+      }
+    });
+
+    await assignment.save();
+
+    res.redirect("back");
+
+  } catch (err) {
+    console.error(err);
+    res.send("Submission error");
+  }
+});
+
+app.get("/students/:id/attendance", async (req, res) => {
+  const student = await Student.findById(req.params.id).lean();
+
+  const attendance = await Attendance.find({
+    studentName: student.fullName
+  }).lean();
+
+  res.render("studentAttendance", { student, attendance });
+});
+
+app.get("/students/:id/results", async (req, res) => {
+  const student = await Student.findById(req.params.id).lean();
+
+  const marks = await Marks.find({
+    studentName: student.fullName
+  }).lean();
+
+  res.render("studentMarks", { student, marks });
 });
 
 
@@ -228,14 +301,146 @@ app.get("/teachers/:id/dashboard", async (req, res) => {
     photoBase64 = `data:${teacher.photo.contentType};base64,${teacher.photo.data.toString("base64")}`;
   }
 
+  const assignedSubjects = await Subject.find({
+    assignedTeacher: teacher.fullName
+  }).lean();
+
+  const timetable = await Timetable.find({
+    teacher: teacher.fullName
+  }).lean();
+
   res.render("teacherDashboard", {
     teacher,
     photoBase64,
-    assignedSubjects: await Subject.find({ assignedTeacher: teacher.fullName }),
-    timetable: await Timetable.find({ teacher: teacher.fullName })
+    assignedSubjects,
+    timetable
   });
 });
 
+// VIEW ALL SUBMISSIONS OF ONE ASSIGNMENT
+app.get("/assignments/:id/submissions", async (req, res) => {
+  const assignment = await Assignment.findById(req.params.id).lean();
+
+  res.render("viewSubmissions", { assignment });
+});
+
+app.post("/assignments/:id/grade/:index", async (req, res) => {
+  const assignment = await Assignment.findById(req.params.id);
+
+  const sub = assignment.submissions[req.params.index];
+
+  sub.marks = req.body.marks;
+  sub.feedback = req.body.feedback;
+
+  await assignment.save();
+
+  res.redirect("back");
+});
+// GET page
+app.get("/teachers/:id/assignments", async (req, res) => {
+  const teacher = await Teacher.findById(req.params.id).lean();
+
+  const assignments = await Assignment.find({
+    teacher: teacher.fullName
+  }).lean();
+
+  res.render("teacherAssignments", { teacher, assignments });
+});
+
+// POST (upload assignment)
+app.post("/assignments", upload.single("file"), async (req, res) => {
+  try {
+    const { assignment } = req.body;
+
+    const newAssignment = new Assignment({
+      title: assignment.title,
+      subject: assignment.subject,
+      teacher: assignment.teacher,
+      description: assignment.description,
+      dueDate: assignment.dueDate
+    });
+
+    if (req.file) {
+      newAssignment.file = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype
+      };
+    }
+
+    await newAssignment.save();
+
+    res.redirect("back");
+
+  } catch (err) {
+    console.error(err);
+    res.send("Error uploading assignment");
+  }
+});
+
+app.get("/teachers/:id/attendance", async (req, res) => {
+  const teacher = await Teacher.findById(req.params.id).lean();
+  const students = await Student.find().lean();
+
+  res.render("teacherAttendance", { teacher, students });
+});
+
+app.post("/attendance", async (req, res) => {
+  try {
+    const { records } = req.body;
+
+    const attendanceData = [];
+
+    for (let studentName in records) {
+      attendanceData.push({
+        studentName,
+        subject: req.body.subject,
+        status: records[studentName],
+        teacher: req.body.teacher
+      });
+    }
+
+    await Attendance.insertMany(attendanceData);
+
+    res.redirect("back");
+
+  } catch (err) {
+    console.error(err);
+    res.send("Error marking attendance");
+  }
+});
+
+app.get("/teachers/:id/marks", async (req, res) => {
+  const teacher = await Teacher.findById(req.params.id).lean();
+  const students = await Student.find().lean();
+  const marks = await Marks.find().lean();
+
+  res.render("teacherMarks", { teacher, students, marks });
+});
+
+app.post("/marks", async (req, res) => {
+  try {
+    const { marks } = req.body;
+
+    await Marks.create({
+      studentName: marks.studentName,
+      subject: marks.subject,
+      marks: marks.marks,
+      examType: marks.examType,
+      teacher: marks.teacher
+    });
+
+    res.redirect("back");
+
+  } catch (err) {
+    console.error(err);
+    res.send("Error adding marks");
+  }
+});
+
+app.put("/marks/:id", async (req, res) => {
+  await Marks.findByIdAndUpdate(req.params.id, req.body.marks);
+  res.redirect("back");
+});
 
 // ================= SUBJECTS =================
 app.get("/subjects", async (req, res) => {
